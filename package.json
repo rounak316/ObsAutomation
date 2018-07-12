@@ -12,6 +12,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "obs-websocket-js": "^1.2.0",
     "rtmp-server": "^0.2.0",
+    "uws": "^10.148.1",
     "youtube-dl": "^1.12.2"
   }
 }
