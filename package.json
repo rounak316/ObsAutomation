@@ -13,6 +13,7 @@
     "obs-websocket-js": "^1.2.0",
     "rtmp-server": "^0.2.0",
     "uws": "^10.148.1",
+    "ws": "^5.2.2",
     "youtube-dl": "^1.12.2"
   }
 }

@@ -1,6 +1,11 @@
 var fs = require('fs');
 var youtubedl = require('youtube-dl');
-var video = youtubedl('https://www.facebook.com/IndiaToday/videos/10157265642317119/',
+
+function downloadVideo(url){
+//  console.log('downloadVideo',url)
+  return new Promise( (res,rej)=>{
+
+  let video =   youtubedl(url,
   // Optional arguments passed to youtube-dl.
 //   ['--format=18'],
 [],
@@ -9,13 +14,20 @@ var video = youtubedl('https://www.facebook.com/IndiaToday/videos/10157265642317
  
 // Will be called when the download starts.
 video.on('info', function(info) {
-  console.log('Download started');
-  console.log('filename: ' + info._filename);
-  console.log('size: ' + info.url);
+  // console.log('Download started');
+  // console.log('filename: ' + info._filename);
+  res( info.url);
+  
 });
  
 video.on('error', function(){
-    console.log('Coudn\'t load video')
+    rej('Coudn\'t load video')
 })
 
+  } )
+}
+
+
+
+module.exports.downloadVideo= downloadVideo
 // video.pipe(fs.createWriteStream('myvideo.mp4'));
