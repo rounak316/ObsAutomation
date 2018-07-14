@@ -1,4 +1,5 @@
-const eventEmitter = require('./wsserver').eventEmitter
+const wsserver = require('./wsserver')
+const eventEmitter = wsserver.eventEmitter
 const streamToRTMP = require('./ffmpeg').streamToRTMP
 const RtmpServer = require('rtmp-server');
 const rtmpServer = new RtmpServer();
@@ -8,9 +9,24 @@ let publisherConnected = obscontroller.publisherConnected
 
 let StreamURLS = []
 
+
+obscontroller.eventListener.on("updates", (update)=>{
+    console.log('Updates', update)
+    wsserver.broadcast(update)
+})
+
+
+eventEmitter.on('sceneChangeRequest', sceneName=>{
+    obscontroller.setScene(sceneName)
+})
+
 eventEmitter.on('url', (url)=>{
     console.log('URL RECIEVED', url)
     StreamURLS.push(url)
+})
+
+eventEmitter.on('conected', ()=>{
+    obscontroller.getSceneList()
 })
 
 function checkForStreamUpdatesAndPlay(){

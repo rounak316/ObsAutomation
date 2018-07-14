@@ -1,6 +1,8 @@
 const OBSWebSocket = require('obs-websocket-js');
-
+const events = require('events');
+const eventEmitter = new events.EventEmitter();
 const VideoSources = []
+const obs = new OBSWebSocket();
 
 
 Console = {
@@ -21,6 +23,10 @@ function transitionToRTMPScene(){
 function transitionToPromoScene(){
     promoVisible = true
     obs.setCurrentScene({'scene-name':"NewsRoomWithBreakingNewsPromo"})
+}
+
+function setScene(sceneName){
+    obs.setCurrentScene({'scene-name':sceneName} )
 }
 
 function transitionToVideoAddvertisementScene(){
@@ -87,20 +93,30 @@ addAudioVideoSource(v,a,t)
 
 
 
-const obs = new OBSWebSocket();
 
 function sceneOnEnd(scenename){
     Console.log('Scene ssampta', scenename)
 }
+
+function informUpdates( updates ){
+    console.log('informUpdates', updates)
+    eventEmitter.emit("updates",updates)
+}
+
+
+obs.onSwitchScenes(data => {
+    informUpdates( data)
+  });
 
 
 obs.connect({ address: 'localhost:4444', password: '$up3rSecretP@ssw0rd' })
   .then(() => {
     // Console.log(`Success! We're connected & authenticated.`);
     transitionToPromoScene()
-	  return obs.getSceneList();
+    return obs.getSceneList();
   })
   .then(data => {
+    informUpdates( data)
     // Console.log(`${data.scenes.length} Available Scenes!`);
     
     data.scenes.forEach(scene => {
@@ -149,10 +165,22 @@ obs.SetSourceSettings(  {
 
 
 
+function addListener(){
+    obs.onSwitchScenes(informUpdates);
+    obs.onScenesChanged(informUpdates)
+}
+addListener()
 
-obs.onSwitchScenes(data => {
-  Console.log(`New Active Scene: ${data.sceneName}`);
-});
+
+function GetSceneList(){
+    console.log('GetSceneList')-
+    obs.getSceneList().then(data=>{
+        data["updateType"] = "GetSceneList"
+        return data
+    }).then(informUpdates).catch(console.log)
+
+}
+
 
 // You must add this handler to avoid uncaught exceptions.
 obs.on('error', err => {
@@ -169,5 +197,10 @@ function publisherConnected(){
     transitionToRTMPScene()
 }
 
+
+
 module.exports.publisherDisconnected = publisherDisconnected
 module.exports.publisherConnected = publisherConnected
+module.exports.eventListener = eventEmitter
+module.exports.getSceneList = GetSceneList
+module.exports.setScene = setScene

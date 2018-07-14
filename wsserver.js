@@ -20,12 +20,16 @@ function addUrl(url){
 }
 
 function onMessage(message) {
-    // console.log('received: ' + message);
+    console.log('received: ' + message);
 
     try{
 
             let jsonMessage = JSON.parse(message)
             switch(jsonMessage.a){
+                case "ss": //setScene
+                    eventEmitter.emit('sceneChangeRequest', jsonMessage.d)
+
+                break;
                 case "s":
                         switch(jsonMessage.s){
                             case "sm":
@@ -48,9 +52,19 @@ function onMessage(message) {
 }
 
 wss.on('connection', function(ws) {
+    eventEmitter.emit('conected')
     ws.on('message', onMessage);
     // ws.send('something');
 });
 
+function broadcast(data){
+    try{
+        
+        wss.broadcast(JSON.stringify(data))
+    } catch(err){
+
+    }
+}
 
 module.exports.eventEmitter = eventEmitter
+module.exports.broadcast = broadcast

@@ -15,11 +15,8 @@ ws.on('close', function close() {
 });
  
 ws.on('message', function incoming(data) {
-//   console.log(`Roundtrip time: ${Date.now() - data} ms`);
+  console.log(data);
  
-  setTimeout(function timeout() {
-
-  }, 500);
 });
 
 function sendData(data){
