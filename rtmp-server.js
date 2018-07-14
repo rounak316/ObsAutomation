@@ -8,7 +8,7 @@ let publisherDisconnected = obscontroller.publisherDisconnected
 let publisherConnected = obscontroller.publisherConnected
 
 let StreamURLS = []
-
+let newsHeadlines = []
 
 obscontroller.eventListener.on("updates", (update)=>{
     console.log('Updates', update)
@@ -28,6 +28,38 @@ eventEmitter.on('url', (url)=>{
 eventEmitter.on('conected', ()=>{
     obscontroller.getSceneList()
 })
+
+function invalidateNewsTickerText(){
+    obscontroller.invalidateNewsTickerText(newsHeadlines)
+}
+
+
+eventEmitter.on('setTextNewsTicker', (news)=>{
+    console.log('setTextNewsTicker', news)
+    newsHeadlines = [news]
+    invalidateNewsTickerText()
+})
+
+eventEmitter.on('addTextNewsTicker', (news)=>{
+    console.log('addTextNewsTicker', news)
+    newsHeadlines.push( news )
+    invalidateNewsTickerText()
+})
+
+eventEmitter.on('delTextNewsTicker', (index)=>{
+    index = parseInt(index)
+    if (newsHeadlines.length >= index){
+        newsHeadlines.splice( index , 1 )
+        invalidateNewsTickerText()
+    }
+    
+})
+
+
+eventEmitter.on('getTextNewsTicker', (index)=>{
+    wsserver.broadcast(newsHeadlines)
+})
+
 
 function checkForStreamUpdatesAndPlay(){
 

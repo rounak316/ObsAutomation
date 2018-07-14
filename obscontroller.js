@@ -172,6 +172,28 @@ function addListener(){
 addListener()
 
 
+function invalidateNewsTickerText(newsList){
+    let betweenSplitter = ""
+    let lastSplitter = ""
+    for(let i=0;i<30;i++){
+        betweenSplitter+= " "
+    }
+
+    for(let i=0;i<100;i++){
+        lastSplitter+= " "
+    }
+
+        let News = newsList.join(betweenSplitter)
+        News =   lastSplitter + "  " + News
+        try{
+            console.log('newNews' , News)
+            obs.setSourceSettings({ sourceName:"newsTickerText" ,  sourceSettings: { text: News}  }).then().catch()
+
+        } catch(err){
+
+        }
+}
+
 function GetSceneList(){
     console.log('GetSceneList')-
     obs.getSceneList().then(data=>{
@@ -204,3 +226,4 @@ module.exports.publisherConnected = publisherConnected
 module.exports.eventListener = eventEmitter
 module.exports.getSceneList = GetSceneList
 module.exports.setScene = setScene
+module.exports.invalidateNewsTickerText= invalidateNewsTickerText

@@ -1,5 +1,5 @@
 var WebSocketServer = require('uws').Server;
-var wss = new WebSocketServer({ port: 3000 });
+var wss = new WebSocketServer({host: "0.0.0.0" ,  port: 3000 });
 
 const events = require('events');
 const eventEmitter = new events.EventEmitter();
@@ -39,6 +39,20 @@ function onMessage(message) {
                             default:
                             break
                         }
+
+                break;
+                case "sh": //set Headline
+                    eventEmitter.emit('setTextNewsTicker', jsonMessage.d)
+
+                break;
+
+                case "ah": //add Headline
+                    eventEmitter.emit('addTextNewsTicker', jsonMessage.d)
+
+                break;
+
+                case "dh": //add Headline
+                    eventEmitter.emit('delTextNewsTicker', jsonMessage.d)
 
                 break;
 
