@@ -7,7 +7,7 @@ function downloadVideo(url){
 
   let video =   youtubedl(url,
   // Optional arguments passed to youtube-dl.
-//   ['--format=18'],
+  // ['--merge-output-format'],
 [],
   // Additional options can be given for calling `child_process.execFile()`.
   { cwd: __dirname });

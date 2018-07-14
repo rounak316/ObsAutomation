@@ -35,7 +35,7 @@ setTimeout( ()=>{
     sendData( JSON.stringify(  {
         a: "s",
         s: "sm",
-        d: "https://www.youtube.com/watch?v=zZkiE4GyzAg"
+        d: "https://www.youtube.com/watch?v=sgz5dutPF8M"
     } ) )
 
 } , 300 )
